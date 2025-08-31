@@ -15,6 +15,7 @@ pipe = DiffusionPipeline.from_pretrained(
 ).to("cuda")
 
 def generate_images(job_id, scenes):
+    
     results = []
     os.makedirs("/outputs", exist_ok=True)
 
