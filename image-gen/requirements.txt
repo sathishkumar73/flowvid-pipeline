@@ -1,0 +1,15 @@
+# PyTorch with CUDA 12.4 wheels
+torch==2.5.1+cu124
+torchvision==0.20.1+cu124
+--extra-index-url https://download.pytorch.org/whl/cu124
+
+# Hugging Face + diffusion stack
+diffusers>=0.32.1
+transformers>=4.47.1
+accelerate>=1.2.1
+einops>=0.7.0
+safetensors
+huggingface_hub
+
+# RunPod SDK
+runpod
