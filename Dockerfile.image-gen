@@ -8,10 +8,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 # Install Python deps
-COPY ./image-gen/requirements.txt .
+COPY image-gen/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy app code
-COPY ./image-gen/handler.py .
+COPY image-gen/handler.py .
 
 CMD ["python", "-u", "handler.py"]
