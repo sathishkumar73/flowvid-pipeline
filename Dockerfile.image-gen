@@ -2,16 +2,26 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install basic tools
+# Install system tools + git-lfs for HuggingFace large file support
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    git wget curl && \
+    git git-lfs wget curl && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Python deps
+# Install Python deps first (so model caching happens after)
 COPY image-gen/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir huggingface_hub
+
+# Pre-download HiDream model into /models
+# This layer will make the image ~20–25 GB
+RUN mkdir -p /models && \
+    python -c "from huggingface_hub import snapshot_download; \
+               snapshot_download('HiDream-ai/HiDream-I1-Dev', cache_dir='/models', local_dir='/models/HiDream-I1-Dev')"
 
 # Copy app code
 COPY image-gen/handler.py .
+
+# Point HF to baked model by default
+ENV MODEL_PATH=/models/HiDream-I1-Dev
 
 CMD ["python", "-u", "handler.py"]
