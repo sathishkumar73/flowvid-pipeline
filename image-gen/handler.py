@@ -6,8 +6,8 @@ from huggingface_hub import snapshot_download
 
 MODEL_ID = "HiDream-ai/HiDream-I1-Dev"
 
-# Cache Hugging Face model inside container
-MODEL_PATH = snapshot_download(repo_id=MODEL_ID, cache_dir="/models")
+# Cache Hugging Face model inside persistent RunPod volume
+MODEL_PATH = snapshot_download(repo_id=MODEL_ID, cache_dir="/runpod-volume/models")
 
 pipe = DiffusionPipeline.from_pretrained(
     MODEL_PATH,
@@ -15,7 +15,6 @@ pipe = DiffusionPipeline.from_pretrained(
 ).to("cuda")
 
 def generate_images(job_id, scenes):
-    
     results = []
     os.makedirs("/outputs", exist_ok=True)
 
